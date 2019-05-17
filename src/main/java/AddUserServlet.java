@@ -8,12 +8,9 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class GetIndexPageServlet extends HttpServlet {
-
+public class AddUserServlet extends HttpServlet {
     private List<Book> bookList;
 
     @Override
@@ -21,17 +18,21 @@ public class GetIndexPageServlet extends HttpServlet {
         bookList = (List<Book>) getServletContext().getAttribute("bookList");
     }
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        req.setAttribute("bookList", bookList);
-        req.getRequestDispatcher("/WEB-INF/index.jsp").forward(req, resp);
-    }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            String name = req.getParameter("name");
+            String author = req.getParameter("author");
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("date"));
+            float price = Float.parseFloat(req.getParameter("price"));
 
+            DBHelper.addBook(name, author, date, price);
+            int id = DBHelper.selectMaxId();
+            bookList.add(new Book(id, name, author, date, price));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        resp.sendRedirect(req.getContextPath() + "/");
     }
-
 }
-

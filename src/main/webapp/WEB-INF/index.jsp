@@ -12,6 +12,8 @@
         <td>Author</td>
         <td>Date</td>
         <td>Price</td>
+        <td>Delete</td>
+        <td>Update</td>
     </tr>
     <c:forEach items="${requestScope.bookList}" var="book">
         <tr>
@@ -20,6 +22,12 @@
             <td>${book.author}</td>
             <td>${book.date}</td>
             <td>${book.price}</td>
+            <td>
+                <a href="<c:url value="/delete?id=${book.id}"/>">Delete</a>
+            </td>
+            <td>
+                <a href="<c:url value="/update?id=${book.id}"/>">Update</a>
+            </td>
         </tr>
     </c:forEach>
 </table>
@@ -27,15 +35,13 @@
 <br>
 <br>
 
-<form method="post" action="">
-    <label><input type="number" name="id"></label>Id<br>
+<form method="post" action="<c:url value='/add_user'/> ">
     <label><input type="text" name="name"></label>Name<br>
     <label><input type="text" name="author"></label>Author<br>
     <label><input type="date" name="date"></label>Date<br>
     <label><input type="text" name="price"></label>Price<br>
-    <input type="submit" value="ok" name="ok">
-    <input type="submit" value="delete" name="delete">
-    <input type="submit" value="update" name="update"><br>
+
+    <input type="submit" value="add" name="add">
 </form>
 </body>
 </html>

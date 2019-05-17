@@ -122,7 +122,7 @@ public class DBHelper {
         }
     }
 
-    static void updateById(int id, Map<String, String> map) {
+    static void updateById(int id, String name, String author, Date date, float price) {
         Connection connection;
         PreparedStatement preparedStatement;
 
@@ -130,15 +130,15 @@ public class DBHelper {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
 
-            StringBuilder update = new StringBuilder("UPDATE books SET ");
-            for (Map.Entry<String, String> pair : map.entrySet()) {
-                if (pair.getValue() != null && pair.getValue().length() != 0)
-                    update.append(pair.getKey()).append(" = ").append("'").append(pair.getValue()).append("'").append(", ");
-            }
-            update.delete(update.lastIndexOf(","), update.length());
-            update.append(" WHERE id = ").append(id);
+            String update = "UPDATE books Set name = ?, author = ?, date = ?, price = ? WHERE id = ?";
+            preparedStatement = connection.prepareStatement(update);
 
-            preparedStatement = connection.prepareStatement(update.toString());
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, author);
+            preparedStatement.setDate(3, new java.sql.Date(date.getTime()));
+            preparedStatement.setFloat(4, price);
+            preparedStatement.setInt(5, id);
+
             preparedStatement.executeUpdate();
 
             connection.close();
